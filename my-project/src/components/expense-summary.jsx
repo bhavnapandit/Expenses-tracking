@@ -47,10 +47,10 @@ export function ExpenseSummary({ expenses, categories }) {
   return (
     <div className="space-y-6">
       {/* Total Expenses Section */}
-      <div>
+      <div className="border border-gray-200 shadow-sm shadow-gray-300 p-4 rounded-lg">
         <h2 className="text-xl font-semibold text-gray-700">Summary</h2>
         <div className="text-center mt-4">
-          <p className="text-lg text-gray-600">Total Expenses</p>
+          <p className="text-md text-gray-400">Total Expenses</p>
           <p className="text-2xl font-bold text-gray-800">${totalExpenses.toFixed(2)}</p>
         </div>
 
@@ -95,7 +95,7 @@ export function ExpenseSummary({ expenses, categories }) {
       </div>
 
       {/* Expenses by Category */}
-      <div>
+      <div className="border border-gray-200 shadow-sm shadow-gray-300 p-4 rounded-lg">
         <h2 className="text-xl font-semibold text-gray-700">Expenses by Category</h2>
         <div className="space-y-4 mt-4">
           {expensesByCategory.length > 0 ? (

@@ -34,14 +34,14 @@ export function ExpenseForm({ onAddExpense, categories }) {
   return (
     <div className="card">
       <div className="card-header">
-        <h2 className="text-2xl font-semibold text-gray-800">Add New Expense</h2>
+        <h2 className="text-2xl font-semibold text-black pb-2">Add New Expense</h2>
       </div>
       <div className="card-content">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           
           {/* Amount Field */}
           <div className="flex flex-col">
-            <label htmlFor="amount" className="text-gray-700 font-medium">Amount</label>
+            <label htmlFor="amount" className="text-gray-700 font-medium pb-1">Amount</label>
             <input
               id="amount"
               placeholder="0.00"
@@ -57,7 +57,7 @@ export function ExpenseForm({ onAddExpense, categories }) {
 
           {/* Category Field */}
           <div className="flex flex-col">
-            <label htmlFor="category" className="text-gray-700 font-medium">Category</label>
+            <label htmlFor="category" className="text-gray-700 font-medium pb-1">Category</label>
             <select
               id="category"
               {...form.register("category")}
@@ -77,7 +77,7 @@ export function ExpenseForm({ onAddExpense, categories }) {
 
           {/* Date Field */}
           <div className="flex flex-col">
-            <label htmlFor="date" className="text-gray-700 font-medium">Date</label>
+            <label htmlFor="date" className="text-gray-700 font-medium pb-1">Date</label>
             <input
               id="date"
               type="date"
@@ -91,7 +91,7 @@ export function ExpenseForm({ onAddExpense, categories }) {
 
           {/* Description Field */}
           <div className="flex flex-col">
-            <label htmlFor="description" className="text-gray-700 font-medium">Description</label>
+            <label htmlFor="description" className="text-gray-700 font-medium pb-1">Description</label>
             <textarea
               id="description"
               placeholder="What was this expense for?"
@@ -106,7 +106,7 @@ export function ExpenseForm({ onAddExpense, categories }) {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 transition-all duration-200"
+            className="w-full bg-black text-white p-3 rounded-md hover:bg-gray-600 transition-all duration-200"
           >
             Add Expense
           </button>

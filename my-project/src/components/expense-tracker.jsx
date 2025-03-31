@@ -3,7 +3,6 @@ import { ExpenseForm } from "./expense-form";
 import { ExpenseList } from "./expense-list";
 import { ExpenseSummary } from "./expense-summary";
 
-// Sample categories with colors
 const defaultCategories = [
   { id: "1", name: "Food", color: "bg-red-500" },
   { id: "2", name: "Transportation", color: "bg-blue-500" },
@@ -13,7 +12,6 @@ const defaultCategories = [
   { id: "6", name: "Other", color: "bg-gray-500" },
 ];
 
-// Sample expenses
 const defaultExpenses = [
   {
     id: "1",
@@ -70,46 +68,49 @@ export function ExpenseTracker() {
   };
 
   return (
-    <div className="space-y-12 p-8 bg-white rounded-lg shadow-2xl">
-      <div className="border border-gray-300 p-4 rounded-lg">
-        <h1 className="text-4xl font-extrabold text-left text-gray-800 drop-shadow-lg">
+    <div className="space-y-12 p-8 bg-white border border-gray-200 shadow-sm shadow-gray-300 rounded-lg">
+      <div className="border border-gray-200 shadow-sm shadow-gray-300 p-4 rounded-lg">
+        <h1 className="text-2xl font-bold text-left text-gray-800">
           Expense Tracker
         </h1>
-        <p className="text-left text-xl text-gray-600">
-          Track your spending, save money, and stay on top of your finances.
+        <p className="text-left text-md text-gray-400">
+          Keep track of your expenses and manage your budget effectively.
         </p>
       </div>
 
-      {/* Main Content Layout */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-4">
-        {/* Left section: Tab navigation and content */}
         <div className="md:col-span-2 space-y-8">
           {/* Tab Navigation */}
-          <div className="tabs flex justify-between bg-white rounded-lg shadow-lg p-4">
-            <button
-              onClick={() => setActiveTab("expenses")}
-              className={`tab px-6 py-3 text-white rounded-lg transition-all duration-300 transform hover:scale-105 ${
-                activeTab === "expenses"
-                  ? "bg-gradient-to-r from-blue-500 to-blue-600"
-                  : "bg-gray-300 hover:bg-gray-400"
-              }`}
+          <div className="flex bg-gray-100 rounded-lg p-1">
+            <nav
+              className="flex gap-x-1"
+              aria-label="Tabs"
+              role="tablist"
+              aria-orientation="horizontal"
             >
-              Expenses
-            </button>
-            <button
-              onClick={() => setActiveTab("addExpense")}
-              className={`tab px-6 py-3 text-white rounded-lg transition-all duration-300 transform hover:scale-105 ${
-                activeTab === "addExpense"
-                  ? "bg-gradient-to-r from-green-500 to-green-600"
-                  : "bg-gray-300 hover:bg-gray-400"
-              }`}
-            >
-              Add Expense
-            </button>
+              <button
+                type="button"
+                className={`py-3 px-6 inline-flex items-center gap-x-2 bg-white text-gray-700 text-sm font-medium rounded-lg transition $ {
+              activeTab === "expenses" ? "shadow-md" : "hover:bg-gray-200"
+            }`}
+                onClick={() => setActiveTab("expenses")}
+              >
+                Expenses
+              </button>
+              <button
+                type="button"
+                className={`py-3 px-6 inline-flex items-center gap-x-2 bg-white text-gray-700 text-sm font-medium rounded-lg transition $ {
+              activeTab === "addExpense" ? "shadow-md" : "hover:bg-gray-200"
+            }`}
+                onClick={() => setActiveTab("addExpense")}
+              >
+                Add Expense
+              </button>
+            </nav>
           </div>
 
           {/* Tab Content */}
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="bg-white p-6 border border-gray-200 shadow-sm shadow-gray-300 rounded-lg">
             {activeTab === "expenses" && (
               <ExpenseList
                 expenses={expenses}
@@ -123,8 +124,7 @@ export function ExpenseTracker() {
           </div>
         </div>
 
-        {/* Right section: Expense Summary */}
-        <div className="bg-white p-6 rounded-lg shadow-lg md:col-span-1">
+        <div className="bg-white p-6 border border-gray-200 shadow-sm shadow-gray-300 rounded-lg md:col-span-1 ">
           <ExpenseSummary expenses={expenses} categories={categories} />
         </div>
       </div>
