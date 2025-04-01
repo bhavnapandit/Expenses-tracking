@@ -82,7 +82,7 @@ export function ExpenseSummary({ expenses, categories }) {
                   ))}
                 </Pie>
                 <Tooltip
-                  formatter={(value) => [`$${value.toFixed(2)}`, "Amount"]}
+                  formatter={(value) => [`₹${value.toFixed(2)}`, "Amount"]}
                   labelFormatter={(label) => label}
                   contentStyle={{
                     backgroundColor: "#fff",
