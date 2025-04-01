@@ -1,49 +1,61 @@
-"use client"
+"use client";
 
-import { format } from "date-fns"
-import { ArrowDownAZ, ArrowUpAZ, Trash } from "lucide-react"
-import { useState } from "react"
+import { format } from "date-fns";
+import { ArrowDownAZ, ArrowUpAZ, Trash } from "lucide-react";
+import { useState } from "react";
 
 export function ExpenseList({ expenses, categories, onDelete }) {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [categoryFilter, setCategoryFilter] = useState("all")
-  const [sortField, setSortField] = useState("date")
-  const [sortOrder, setSortOrder] = useState("desc")
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [sortField, setSortField] = useState("date");
+  const [sortOrder, setSortOrder] = useState("desc");
 
   // Filter expenses based on search term and category
   const filteredExpenses = expenses.filter((expense) => {
-    const matchesSearch = expense.description.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = categoryFilter === "all" || expense.category === categoryFilter
-    return matchesSearch && matchesCategory
-  })
+    const matchesSearch =
+      expense.description &&
+      expense.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesCategory =
+      categoryFilter === "all" || expense.category === categoryFilter;
+
+    return matchesSearch && matchesCategory;
+  });
 
   // Sort expenses
   const sortedExpenses = [...filteredExpenses].sort((a, b) => {
+    const aDate = new Date(a.date); // Ensure it's a Date object
+    const bDate = new Date(b.date); // Ensure it's a Date object
+
     if (sortField === "date") {
-      return sortOrder === "asc" ? a.date.getTime() - b.date.getTime() : b.date.getTime() - a.date.getTime()
+      return sortOrder === "asc"
+        ? aDate.getTime() - bDate.getTime()
+        : bDate.getTime() - aDate.getTime();
     } else if (sortField === "amount") {
-      return sortOrder === "asc" ? a.amount - b.amount : b.amount - a.amount
+      return sortOrder === "asc" ? a.amount - b.amount : b.amount - a.amount;
     } else if (sortField === "category") {
-      return sortOrder === "asc" ? a.category.localeCompare(b.category) : b.category.localeCompare(a.category)
+      return sortOrder === "asc"
+        ? a.category.localeCompare(b.category)
+        : b.category.localeCompare(a.category);
     }
-    return 0
-  })
+    return 0;
+  });
 
   // Toggle sort order
   const toggleSort = (field) => {
     if (sortField === field) {
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
-      setSortField(field)
-      setSortOrder("asc")
+      setSortField(field);
+      setSortOrder("asc");
     }
-  }
+  };
 
   // Get category color
   const getCategoryColor = (categoryName) => {
-    const category = categories.find((c) => c.name === categoryName)
-    return category?.color || "bg-gray-500"
-  }
+    const category = categories.find((c) => c.name === categoryName);
+    return category?.color || "bg-gray-500";
+  };
 
   return (
     <div className="card">
@@ -58,7 +70,9 @@ export function ExpenseList({ expenses, categories, onDelete }) {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500">🔍</span>
+            <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500">
+              🔍
+            </span>
           </div>
           {/* Category Filter */}
           <select
@@ -70,7 +84,9 @@ export function ExpenseList({ expenses, categories, onDelete }) {
             {categories.map((category) => (
               <option key={category.id} value={category.name}>
                 <div className="flex items-center gap-2">
-                  <div className={`w-3 h-3 rounded-full ${category.color}`}></div>
+                  <div
+                    className={`w-3 h-3 rounded-full ${category.color}`}
+                  ></div>
                   <span>{category.name}</span>
                 </div>
               </option>
@@ -91,7 +107,12 @@ export function ExpenseList({ expenses, categories, onDelete }) {
                       onClick={() => toggleSort("date")}
                     >
                       Date
-                      {sortField === "date" && (sortOrder === "asc" ? <ArrowUpAZ className="h-4 w-4" /> : <ArrowDownAZ className="h-4 w-4" />)}
+                      {sortField === "date" &&
+                        (sortOrder === "asc" ? (
+                          <ArrowUpAZ className="h-4 w-4" />
+                        ) : (
+                          <ArrowDownAZ className="h-4 w-4" />
+                        ))}
                     </button>
                   </th>
                   <th className="px-4 py-2 text-left">
@@ -100,7 +121,12 @@ export function ExpenseList({ expenses, categories, onDelete }) {
                       onClick={() => toggleSort("category")}
                     >
                       Category
-                      {sortField === "category" && (sortOrder === "asc" ? <ArrowUpAZ className="h-4 w-4" /> : <ArrowDownAZ className="h-4 w-4" />)}
+                      {sortField === "category" &&
+                        (sortOrder === "asc" ? (
+                          <ArrowUpAZ className="h-4 w-4" />
+                        ) : (
+                          <ArrowDownAZ className="h-4 w-4" />
+                        ))}
                     </button>
                   </th>
                   <th className="px-4 py-2 text-left">Description</th>
@@ -110,7 +136,12 @@ export function ExpenseList({ expenses, categories, onDelete }) {
                       onClick={() => toggleSort("amount")}
                     >
                       Amount
-                      {sortField === "amount" && (sortOrder === "asc" ? <ArrowUpAZ className="h-4 w-4" /> : <ArrowDownAZ className="h-4 w-4" />)}
+                      {sortField === "amount" &&
+                        (sortOrder === "asc" ? (
+                          <ArrowUpAZ className="h-4 w-4" />
+                        ) : (
+                          <ArrowDownAZ className="h-4 w-4" />
+                        ))}
                     </button>
                   </th>
                   <th className="px-4 py-2 w-[50px]"></th>
@@ -119,18 +150,26 @@ export function ExpenseList({ expenses, categories, onDelete }) {
               <tbody>
                 {sortedExpenses.map((expense) => (
                   <tr key={expense.id} className="hover:bg-gray-50">
-                    <td className="px-4 py-2 font-medium">{format(expense.date, "MMM d, yyyy")}</td>
+                    <td className="px-4 py-2 font-medium">
+                      {format(expense.date, "MMM d, yyyy")}
+                    </td>
                     <td className="px-4 py-2">
                       <div className="flex items-center gap-2">
-                        <div className={`w-3 h-3 rounded-full ${getCategoryColor(expense.category)}`}></div>
+                        <div
+                          className={`w-3 h-3 rounded-full ${getCategoryColor(
+                            expense.category
+                          )}`}
+                        ></div>
                         <span>{expense.category}</span>
                       </div>
                     </td>
                     <td className="px-4 py-2">{expense.description}</td>
-                    <td className="px-4 py-2 text-right">${expense.amount.toFixed(2)}</td>
+                    <td className="px-4 py-2 text-right">
+                      ${expense.amount.toFixed(2)}
+                    </td>
                     <td className="px-4 py-2 text-center">
                       <button
-                        onClick={() => onDelete(expense.id)}
+                        onClick={() => onDelete(expense._id)}
                         className="p-2 text-red-500 hover:text-red-700 transition-all duration-200"
                       >
                         <Trash className="h-5 w-5" />
@@ -153,5 +192,5 @@ export function ExpenseList({ expenses, categories, onDelete }) {
         )}
       </div>
     </div>
-  )
+  );
 }

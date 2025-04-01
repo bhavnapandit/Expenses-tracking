@@ -1,34 +1,34 @@
-"use client"
+"use client";
 
-import { useMemo } from "react"
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
+import { useMemo } from "react";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 
 export function ExpenseSummary({ expenses, categories }) {
   // Calculate total expenses
   const totalExpenses = useMemo(() => {
-    return expenses.reduce((sum, expense) => sum + expense.amount, 0)
-  }, [expenses])
+    return expenses.reduce((sum, expense) => sum + expense.amount, 0);
+  }, [expenses]);
 
   // Calculate expenses by category
   const expensesByCategory = useMemo(() => {
-    const categoryMap = new Map()
+    const categoryMap = new Map();
 
     expenses.forEach((expense) => {
-      const currentAmount = categoryMap.get(expense.category) || 0
-      categoryMap.set(expense.category, currentAmount + expense.amount)
-    })
+      const currentAmount = categoryMap.get(expense.category) || 0;
+      categoryMap.set(expense.category, currentAmount + expense.amount);
+    });
 
     return Array.from(categoryMap.entries())
       .map(([name, value]) => {
-        const category = categories.find((c) => c.name === name)
+        const category = categories.find((c) => c.name === name);
         return {
           name,
           value,
           color: category?.color.replace("bg-", "") || "gray-500",
-        }
+        };
       })
-      .sort((a, b) => b.value - a.value)
-  }, [expenses, categories])
+      .sort((a, b) => b.value - a.value);
+  }, [expenses, categories]);
 
   // Get tailwind color as hex
   const getTailwindColor = (colorClass) => {
@@ -40,9 +40,9 @@ export function ExpenseSummary({ expenses, categories }) {
       "green-500": "#22c55e",
       "purple-500": "#a855f7",
       "gray-500": "#6b7280",
-    }
-    return colorMap[colorClass] || "#6b7280"
-  }
+    };
+    return colorMap[colorClass] || "#6b7280";
+  };
 
   return (
     <div className="space-y-6">
@@ -51,12 +51,14 @@ export function ExpenseSummary({ expenses, categories }) {
         <h2 className="text-xl font-semibold text-gray-700">Summary</h2>
         <div className="text-center mt-4">
           <p className="text-md text-gray-400">Total Expenses</p>
-          <p className="text-2xl font-bold text-gray-800">${totalExpenses.toFixed(2)}</p>
+          <p className="text-2xl font-bold text-gray-800">
+            ${totalExpenses.toFixed(2)}
+          </p>
         </div>
 
         {/* Pie Chart */}
         {expenses.length > 0 && (
-          <div className="mt-6 h-[250px]">
+          <div className="mt-6 h-[250px] text-[10px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -67,11 +69,16 @@ export function ExpenseSummary({ expenses, categories }) {
                   outerRadius={90}
                   paddingAngle={5}
                   dataKey="value"
-                  label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                  label={({ name, percent }) =>
+                    `${name} (${(percent * 100).toFixed(0)}%)`
+                  }
                   labelLine={false}
                 >
                   {expensesByCategory.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={getTailwindColor(entry.color)} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={getTailwindColor(entry.color)}
+                    />
                   ))}
                 </Pie>
                 <Tooltip
@@ -96,25 +103,35 @@ export function ExpenseSummary({ expenses, categories }) {
 
       {/* Expenses by Category */}
       <div className="border border-gray-200 shadow-sm shadow-gray-300 p-4 rounded-lg">
-        <h2 className="text-xl font-semibold text-gray-700">Expenses by Category</h2>
+        <h2 className="text-xl font-semibold text-gray-700">
+          Expenses by Category
+        </h2>
         <div className="space-y-4 mt-4">
           {expensesByCategory.length > 0 ? (
             expensesByCategory.map((category) => (
-              <div key={category.name} className="flex items-center justify-between space-x-4">
-                <div className="flex items-center space-x-2">
-                  <div
-                    className={`w-4 h-4 rounded-full`}
-                    style={{ backgroundColor: getTailwindColor(category.color) }}
-                  ></div>
-                  <span className="text-lg text-gray-700">{category.name}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="font-medium text-gray-800">${category.value.toFixed(2)}</span>
-                  <span className="text-xs text-gray-500">
-                    ({((category.value / totalExpenses) * 100).toFixed(1)}%)
-                  </span>
-                </div>
-              </div>
+              <div
+  key={category.name}
+  className="flex items-center justify-between space-x-4 w-full md:w-auto"
+>
+  <div className="flex items-center space-x-2">
+    <div
+      className={`w-4 h-4 rounded-full`}
+      style={{
+        backgroundColor: getTailwindColor(category.color),
+      }}
+    ></div>
+    <span className="text-base md:text-md text-gray-700">{category.name}</span>
+  </div>
+  <div className="flex items-center space-x-2">
+    <span className="font-medium text-sm md:text-md text-gray-800">
+      ${category.value.toFixed(2)}
+    </span>
+    <span className="text-xs md:text-[10px] text-gray-500">
+      ({((category.value / totalExpenses) * 100).toFixed(1)}%)
+    </span>
+  </div>
+</div>
+
             ))
           ) : (
             <p className="text-center text-gray-500">No data available</p>
@@ -122,5 +139,5 @@ export function ExpenseSummary({ expenses, categories }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
