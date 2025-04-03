@@ -6,6 +6,8 @@ import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import axios from "axios";
 import PersonIcon from "@mui/icons-material/Person";
+import AuthForm from "./auth-form";
+import Modal from "@mui/material/Modal";
 
 const defaultCategories = [
   { id: "1", name: "Food", color: "bg-red-500" },
@@ -15,11 +17,24 @@ const defaultCategories = [
   { id: "5", name: "Bills", color: "bg-purple-500" },
   { id: "6", name: "Other", color: "bg-gray-500" },
 ];
-
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
 export function ExpenseTracker() {
   const [expenses, setExpenses] = useState([]);
   const [categories] = useState(defaultCategories);
   const [activeTab, setActiveTab] = useState("expenses");
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   // State for Alerts
   const [alert, setAlert] = useState({
@@ -118,10 +133,21 @@ export function ExpenseTracker() {
 
         <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
           {/* From Uiverse.io by sahilxkhadka */}
-          <button className="cursor-pointer group relative flex gap-1.5 px-8 py-4 bg-black bg-opacity-80 text-[#f1f1f1] rounded-3xl hover:bg-opacity-70 transition font-semibold shadow-md">
+          <button
+            onClick={handleOpen}
+            className="cursor-pointer group relative flex gap-1.5 px-8 py-4 bg-black bg-opacity-80 text-[#f1f1f1] rounded-3xl hover:bg-opacity-70 transition font-semibold shadow-md"
+          >
             <PersonIcon className="group-hover:translate-x-1 transition-all duration-300" />
             Login
           </button>
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <AuthForm onClose={handleClose}/>
+          </Modal>
         </div>
       </div>
 
