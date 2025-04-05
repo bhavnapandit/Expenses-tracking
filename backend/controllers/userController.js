@@ -20,17 +20,25 @@ export const signUp = async (req, res) => {
             name,
             email,
             password: hashPassword,
-            expenses: []
+            expenses: [],
         });
 
         await user.save();
-        res.status(201).json({ user });
+
+        res.status(201).json({
+            message: "Signup successful",
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                expenses: user.expenses,
+            },
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error creating user" });
     }
 };
-
 // Login
 export const login = async (req, res) => {
     try {
@@ -46,26 +54,18 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Password is incorrect" });
         }
 
-        // Generate JWT Token
-        const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '1h' });
-
-        // Optionally, set the token as a cookie
-        res.cookie("token", token, { httpOnly: true, secure: true }); // Set secure flag in production
-        res.status(200).json({ message: "Login successful", token });
+        // ✅ No JWT — just send user info
+        res.status(200).json({
+            message: "Login successful",
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                expenses: user.expenses,
+            },
+        });
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: "Error logging in" });
-    }
-};
-
-// Logout
-export const logout = (req, res) => {
-    try {
-        // Clear the JWT token from cookies
-        res.clearCookie("token");
-        res.status(200).json({ message: "Logout successful" });
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: "Error logging out" });
+        res.status(500).json({ message: error.message });
     }
 };

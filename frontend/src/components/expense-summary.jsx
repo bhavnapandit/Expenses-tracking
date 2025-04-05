@@ -52,7 +52,7 @@ export function ExpenseSummary({ expenses, categories }) {
         <div className="text-center mt-4">
           <p className="text-md text-gray-400">Total Expenses</p>
           <p className="text-2xl font-bold text-gray-800">
-            ${totalExpenses.toFixed(2)}
+          ₹{totalExpenses.toFixed(2)}
           </p>
         </div>
 
@@ -124,7 +124,7 @@ export function ExpenseSummary({ expenses, categories }) {
   </div>
   <div className="flex items-center space-x-2">
     <span className="font-medium text-sm md:text-md text-gray-800">
-      ${category.value.toFixed(2)}
+    ₹{category.value.toFixed(2)}
     </span>
     <span className="text-xs md:text-[10px] text-gray-500">
       ({((category.value / totalExpenses) * 100).toFixed(1)}%)

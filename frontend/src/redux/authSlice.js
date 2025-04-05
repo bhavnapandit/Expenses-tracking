@@ -8,9 +8,10 @@ const authSlice = createSlice({
   },
   reducers: {
     login(state, action) {
-      state.user = action.payload.user;  // Store the user object after login
-      state.isAuthenticated = true;  // Update the login state
-    },
+      state.user = action.payload.user;
+      state.isAuthenticated = true;
+    }
+    ,
     logout(state) {
       state.user = null;  // Clear user data when logged out
       state.isAuthenticated = false;  // Set login state to false

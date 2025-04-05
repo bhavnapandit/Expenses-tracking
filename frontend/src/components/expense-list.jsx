@@ -165,7 +165,7 @@ export function ExpenseList({ expenses, categories, onDelete }) {
                     </td>
                     <td className="px-4 py-2">{expense.description}</td>
                     <td className="px-4 py-2 text-right">
-                      ${expense.amount.toFixed(2)}
+                    ₹{expense.amount.toFixed(2)}
                     </td>
                     <td className="px-4 py-2 text-center">
                       <button

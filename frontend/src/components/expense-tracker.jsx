@@ -8,6 +8,8 @@ import axios from "axios";
 import PersonIcon from "@mui/icons-material/Person";
 import AuthForm from "./auth-form";
 import Modal from "@mui/material/Modal";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "../redux/authSlice";
 
 const defaultCategories = [
   { id: "1", name: "Food", color: "bg-red-500" },
@@ -29,6 +31,8 @@ const style = {
   p: 4,
 };
 export function ExpenseTracker() {
+  const dispatch = useDispatch();
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
   const [expenses, setExpenses] = useState([]);
   const [categories] = useState(defaultCategories);
   const [activeTab, setActiveTab] = useState("expenses");
@@ -43,51 +47,75 @@ export function ExpenseTracker() {
     severity: "success",
   });
 
+  // ✅ Fetch only that user's expenses
   const fetchExpenses = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/expense");
+      const res = await axios.get(
+        `http://localhost:5000/api/expense/${user._id}`
+      );
       return res.data;
     } catch (error) {
-      console.log(error);
+      console.error("Fetch error:", error);
       return [];
     }
   };
 
   useEffect(() => {
+    if (!user?._id) return; // Skip if user not available yet
+
     const fetchData = async () => {
       const data = await fetchExpenses();
       setExpenses(data);
     };
 
     fetchData();
-  }, []);
+  }, [user]);
 
+  // ✅ Refresh Expenses
   const refreshExpenses = async () => {
     const data = await fetchExpenses();
     setExpenses(data);
   };
 
+  // ✅ Add New Expense
   const addExpense = async (expense) => {
     try {
+      const user = JSON.parse(localStorage.getItem("user"));
+
+      if (!user?._id) {
+        return setAlert({
+          open: true,
+          message: "User not authenticated.",
+          severity: "error",
+        });
+      }
+
+      const payload = {
+        ...expense,
+        user: user._id,
+      };
+
       const res = await axios.post(
         "http://localhost:5000/api/expense",
-        expense
+        payload
       );
-      const newExpense = res.data;
 
-      // Update the state immediately with the new expense
+      // Only add the actual expense object, not the whole message
+      const newExpense = res.data.expense;
+
+      // Optimistically update state
       setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
-      refreshExpenses();
-      // Show success alert
+
+      // Optional: Refresh from backend to sync
+      await refreshExpenses();
+
       setAlert({
         open: true,
         message: "Expense added successfully!",
         severity: "success",
       });
     } catch (error) {
-      console.log("Error occurred while adding expense:", error);
-
-      // Show error alert
+      console.error("Error occurred while adding expense:", error);
       setAlert({
         open: true,
         message: "Failed to add expense!",
@@ -96,29 +124,46 @@ export function ExpenseTracker() {
     }
   };
 
+  // ✅ Delete Expense by ID
   const deleteExpense = async (id) => {
     try {
       await axios.delete(`http://localhost:5000/api/expense/delete/${id}`);
+
       setExpenses((prevExpenses) =>
-        prevExpenses.filter((expense) => expense.id !== id)
+        prevExpenses.filter((expense) => expense._id !== id)
       );
-      refreshExpenses();
-      // Show success alert
+
+      await refreshExpenses();
+
       setAlert({
         open: true,
         message: "Expense deleted successfully!",
         severity: "warning",
       });
     } catch (error) {
-      console.log("Error occurred while deleting expense:", error);
-
-      // Show error alert
+      console.error("Error occurred while deleting expense:", error);
       setAlert({
         open: true,
         message: "Failed to delete expense!",
         severity: "error",
       });
     }
+  };
+
+  const handleLogout = () => {
+    // Clean up localStorage
+    localStorage.removeItem("jwtToken"); // optional, since you said no JWT
+    localStorage.removeItem("user"); // remove stored user info
+
+    // Dispatch logout action to Redux
+    dispatch(authActions.logout());
+
+    // Show a logout success alert
+    setAlert({
+      open: true,
+      message: "Logout successful!",
+      severity: "success", // maybe change from "error" to "success"
+    });
   };
 
   return (
@@ -132,22 +177,36 @@ export function ExpenseTracker() {
         </p>
 
         <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-          {/* From Uiverse.io by sahilxkhadka */}
-          <button
-            onClick={handleOpen}
-            className="cursor-pointer group relative flex gap-1.5 px-8 py-4 bg-black bg-opacity-80 text-[#f1f1f1] rounded-3xl hover:bg-opacity-70 transition font-semibold shadow-md"
-          >
-            <PersonIcon className="group-hover:translate-x-1 transition-all duration-300" />
-            Login
-          </button>
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <AuthForm onClose={handleClose}/>
-          </Modal>
+          {/* Auth Button */}
+          {!isAuthenticated ? (
+            <>
+              <button
+                onClick={handleOpen}
+                className="cursor-pointer group relative flex gap-1.5 px-8 py-4 bg-black bg-opacity-80 text-[#f1f1f1] rounded-3xl hover:bg-opacity-70 transition font-semibold shadow-md"
+              >
+                <PersonIcon className="group-hover:translate-x-1 transition-all duration-300" />
+                Login
+              </button>
+              <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <AuthForm onClose={handleClose} />
+              </Modal>
+            </>
+          ) : (
+            <button
+              onClick={handleLogout}
+              className="cursor-pointer group relative flex items-center gap-1.5 px-8 py-4 bg-black bg-opacity-80 text-[#f1f1f1] rounded-3xl hover:bg-opacity-70 transition font-semibold shadow-md"
+            >
+              <span className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center text-sm font-bold group-hover:-translate-x-1 transition-all duration-300">
+                {user?.name?.[0]?.toUpperCase() || "U"}
+              </span>
+              Logout
+            </button>
+          )}
         </div>
       </div>
 
