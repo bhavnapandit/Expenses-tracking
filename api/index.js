@@ -41,7 +41,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ✅ Simple test route
-app.get("/api/test", (req, res) => {
+app.get("/", (req, res) => {
   res.json({ message: "Backend is working!" });
 });
 
