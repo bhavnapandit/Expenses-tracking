@@ -12,29 +12,29 @@ dotenv.config();
 const app = express();
 
 // ✅ CORS HEADERS FIX
-app.use((req, res, next) => {
-    res.setHeader(
-        "Access-Control-Allow-Origin",
-        "https://expenses-tracking-frontend.vercel.app"
-    );
-    res.setHeader(
-        "Access-Control-Allow-Methods",
-        "GET, POST, PUT, DELETE, OPTIONS"
-    );
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
+//app.use((req, res, next) => {
+//     res.setHeader(
+//         "Access-Control-Allow-Origin",
+//         "https://expenses-tracking-frontend.vercel.app"
+//     );
+//     res.setHeader(
+//         "Access-Control-Allow-Methods",
+//         "GET, POST, PUT, DELETE, OPTIONS"
+//     );
+//     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+//     res.setHeader("Access-Control-Allow-Credentials", "true");
 
-    if (req.method === "OPTIONS") {
-        return res.sendStatus(200); // ← VERY IMPORTANT for preflight!
-    }
+//     if (req.method === "OPTIONS") {
+//         return res.sendStatus(200); // ← VERY IMPORTANT for preflight!
+//     }
 
-    next();
-});
+//     next();
+// });
 
 // Optional: Also use cors()
 app.use(
     cors({
-        origin: "https://expenses-tracking-frontend.vercel.app",
+        origin: "",
         credentials: true,
     })
 );
