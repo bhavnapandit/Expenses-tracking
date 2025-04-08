@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import serverless from "serverless-http";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -11,6 +10,7 @@ import expenseRoutes from "./routes/expenseRoutes.js";
 dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
 // ✅ CORS config
 const corsOptions = {
@@ -22,7 +22,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ MongoDB connection cache
+// ✅ MongoDB connection with caching
 let isConnected = false;
 async function connectToDB() {
     if (isConnected || mongoose.connection.readyState === 1) return;
@@ -36,7 +36,7 @@ async function connectToDB() {
     }
 }
 
-// ✅ Middleware to connect to DB before routes
+// ✅ Middleware to connect to DB before handling routes
 app.use(async (req, res, next) => {
     await connectToDB();
     next();
@@ -47,5 +47,7 @@ app.get("/", (req, res) => res.json({ message: "Backend is working!" }));
 app.use("/api/user", userRouter);
 app.use("/api/expense", expenseRoutes);
 
-// ✅ Vercel serverless export
-export default serverless(app);
+// ✅ Start server (REQUIRED for Render)
+app.listen(PORT, () => {
+    console.log(`🚀 Server is running on port ${PORT}`);
+});
