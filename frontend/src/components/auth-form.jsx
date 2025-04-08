@@ -34,7 +34,7 @@ const AuthForm = () => {
             }
 
             const res = await axios.post(
-                `https://expenses-tracking-api-five.vercel.app/api/user/${type}`,
+                `https://expenses-tracking-api.onrender.com/api/user/${type}`,
                 payload,
                 {
                     withCredentials: true,
