@@ -12,32 +12,35 @@ dotenv.config();
 
 const app = express();
 
-// ✅ CORS config to allow frontend domain
+// ✅ CORS config
 const corsOptions = {
-  origin: "https://expenses-tracking-frontend.vercel.app",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true,
+    origin: "https://expenses-tracking-frontend.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
 };
 app.use(cors(corsOptions));
-
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ Test route
-app.get("/", (req, res) => {
-  res.json({ message: "Backend is working!" });
-});
+// ✅ MongoDB cached connection
+let isConnected = false;
+async function connectToDB() {
+    if (isConnected) return;
 
-// ✅ MongoDB connection
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+        isConnected = true;
+        console.log("✅ MongoDB connected");
+    } catch (err) {
+        console.error("❌ MongoDB connection error:", err);
+    }
+}
+await connectToDB(); // 👈 Add this
 
-// ✅ API routes
+// ✅ Routes
+app.get("/", (req, res) => res.json({ message: "Backend is working!" }));
 app.use("/api/user", userRouter);
 app.use("/api/expense", expenseRoutes);
 
-// ✅ Default export required for Vercel Serverless
+// ✅ Default export for Vercel
 export default serverless(app);
-
