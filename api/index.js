@@ -26,15 +26,16 @@ app.use((req, res, next) => {
     next();
 });
 
-// ✅ cors() middleware for smoother handling
-app.use(
-    cors({
-        origin: [
-            "https://expenses-tracking-frontend.vercel.app",
-        ],
-        credentials: true,
-    })
-);
+const cors = require('cors');
+
+const corsOptions = {
+    origin: 'https://expenses-tracking-frontend.vercel.app', // allow only your frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 
 app.use(express.json());
 app.use(cookieParser());
