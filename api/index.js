@@ -22,10 +22,10 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ MongoDB cached connection
+// ✅ MongoDB connection cache
 let isConnected = false;
 async function connectToDB() {
-    if (isConnected) return;
+    if (isConnected || mongoose.connection.readyState === 1) return;
 
     try {
         await mongoose.connect(process.env.MONGO_URI);
@@ -35,12 +35,17 @@ async function connectToDB() {
         console.error("❌ MongoDB connection error:", err);
     }
 }
-await connectToDB(); // 👈 Add this
+
+// ✅ Middleware to connect to DB before routes
+app.use(async (req, res, next) => {
+    await connectToDB();
+    next();
+});
 
 // ✅ Routes
 app.get("/", (req, res) => res.json({ message: "Backend is working!" }));
 app.use("/api/user", userRouter);
 app.use("/api/expense", expenseRoutes);
 
-// ✅ Default export for Vercel
+// ✅ Vercel serverless export
 export default serverless(app);
