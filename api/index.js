@@ -5,8 +5,8 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
-import userRouter from "../routes/userRoutes.js";
-import expenseRoutes from "../routes/expenseRoutes.js";
+import userRouter from "./routes/userRoutes.js";
+import expenseRoutes from "./routes/expenseRoutes.js";
 
 dotenv.config();
 
