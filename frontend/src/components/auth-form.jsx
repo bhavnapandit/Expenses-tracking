@@ -38,6 +38,9 @@ const AuthForm = () => {
                 payload,
                 {
                     withCredentials: true,
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
                 }
             );
 
