@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import expenseRoutes from "./routes/expenseRoutes.js";
+import expenseRoutes from "../routes/expenseRoutes.js";
 import cookieParser from 'cookie-parser';
-import userRouter from './routes/userRoutes.js';
+import userRouter from '../routes/userRoutes.js';
 import serverless from 'serverless-http';
 
 dotenv.config();
