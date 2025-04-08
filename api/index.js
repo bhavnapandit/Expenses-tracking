@@ -32,12 +32,14 @@ const app = express();
 // });
 
 // Optional: Also use cors()
-app.use(
-    cors({
-        origin: "",
-        credentials: true,
-    })
-);
+cors({
+    origin: [
+        "http://localhost:3000",
+        "https://expenses-tracking-frontend.vercel.app",
+    ],
+    credentials: true,
+});
+
 
 app.use(express.json());
 app.use(cookieParser());
