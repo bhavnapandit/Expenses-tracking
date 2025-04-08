@@ -14,7 +14,7 @@ const app = express();
 
 // ✅ CORS config to allow frontend domain
 const corsOptions = {
-  origin: "https://expenses-tracking-frontend.vercel.app", // frontend domain
+  origin: "https://expenses-tracking-frontend.vercel.app",
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
@@ -38,5 +38,6 @@ mongoose
 app.use("/api/user", userRouter);
 app.use("/api/expense", expenseRoutes);
 
-// ✅ For Vercel serverless function export
-export const handler = serverless(app);
+// ✅ Default export required for Vercel Serverless
+export default serverless(app);
+
