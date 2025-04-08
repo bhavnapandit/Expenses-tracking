@@ -127,7 +127,9 @@ export function ExpenseTracker() {
   // ✅ Delete Expense by ID
   const deleteExpense = async (id) => {
     try {
-      await axios.delete(`https://expenses-tracking-api.onrender.com/api/expense/delete/${id}`);
+      await axios.delete(
+        `https://expenses-tracking-api.onrender.com/api/expense/delete/${id}`
+      );
 
       setExpenses((prevExpenses) =>
         prevExpenses.filter((expense) => expense._id !== id)
@@ -168,21 +170,23 @@ export function ExpenseTracker() {
 
   return (
     <div className="space-y-12 p-8 bg-white border border-gray-200 shadow-sm shadow-gray-300 rounded-lg">
-      <div className="border border-gray-200 shadow-sm shadow-gray-300 p-4 rounded-lg relative">
-        <h1 className="text-2xl font-bold text-left text-gray-800">
-          Expense Tracker
-        </h1>
-        <p className="text-left text-md text-gray-400">
-          Keep track of your expenses and manage your budget effectively.
-        </p>
+      <div className="border border-gray-200 shadow-sm shadow-gray-300 p-4 rounded-lg relative flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
+            Expense Tracker
+          </h1>
+          <p className="text-sm sm:text-md text-gray-500">
+            Keep track of your expenses and manage your budget effectively.
+          </p>
+        </div>
 
-        <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-          {/* Auth Button */}
+        {/* Auth Button */}
+        <div className="mt-4 sm:mt-0 sm:ml-4">
           {!isAuthenticated ? (
             <>
               <button
                 onClick={handleOpen}
-                className="cursor-pointer group relative flex gap-1.5 px-8 py-4 bg-black bg-opacity-80 text-[#f1f1f1] rounded-3xl hover:bg-opacity-70 transition font-semibold shadow-md"
+                className="cursor-pointer group relative flex gap-1.5 px-6 py-3 bg-black bg-opacity-80 text-[#f1f1f1] rounded-3xl hover:bg-opacity-70 transition font-semibold shadow-md text-sm sm:text-base"
               >
                 <PersonIcon className="group-hover:translate-x-1 transition-all duration-300" />
                 Login
@@ -199,7 +203,7 @@ export function ExpenseTracker() {
           ) : (
             <button
               onClick={handleLogout}
-              className="cursor-pointer group relative flex items-center gap-1.5 px-8 py-4 bg-black bg-opacity-80 text-[#f1f1f1] rounded-3xl hover:bg-opacity-70 transition font-semibold shadow-md"
+              className="cursor-pointer group relative flex items-center gap-1.5 px-6 py-3 bg-black bg-opacity-80 text-[#f1f1f1] rounded-3xl hover:bg-opacity-70 transition font-semibold shadow-md text-sm sm:text-base"
             >
               <span className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center text-sm font-bold group-hover:-translate-x-1 transition-all duration-300">
                 {user?.name?.[0]?.toUpperCase() || "U"}
