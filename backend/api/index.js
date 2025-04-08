@@ -41,6 +41,9 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
+app.get('/api/test', (req, res) => {
+    res.json({ message: 'Backend is working!' });
+});
 
 // Mongo
 mongoose
