@@ -34,7 +34,7 @@ const AuthForm = () => {
             }
 
             const res = await axios.post(
-                `http://localhost:5000/api/user/${type}`,
+                `https://expenses-tracking-backend.vercel.app/api/user/${type}`,
                 payload
             );
             return res.data;

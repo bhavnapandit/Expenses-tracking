@@ -51,7 +51,7 @@ export function ExpenseTracker() {
   const fetchExpenses = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:5000/api/expense/${user._id}`
+        `https://expenses-tracking-backend.vercel.app//api/expense/${user._id}`
       );
       return res.data;
     } catch (error) {
@@ -96,7 +96,7 @@ export function ExpenseTracker() {
       };
 
       const res = await axios.post(
-        "http://localhost:5000/api/expense",
+        "https://expenses-tracking-backend.vercel.app/api/expense",
         payload
       );
 
@@ -127,7 +127,7 @@ export function ExpenseTracker() {
   // ✅ Delete Expense by ID
   const deleteExpense = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/expense/delete/${id}`);
+      await axios.delete(`https://expenses-tracking-backend.vercel.app/api/expense/delete/${id}`);
 
       setExpenses((prevExpenses) =>
         prevExpenses.filter((expense) => expense._id !== id)
