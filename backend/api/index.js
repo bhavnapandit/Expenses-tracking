@@ -55,4 +55,5 @@ mongoose
 app.use("/user", userRouter); // So the final route is /api/user/signup
 app.use("/expense", expenseRoutes);
 
-export default serverless(app);
+module.exports = serverless(app);
+
