@@ -1,8 +1,5 @@
 import User from "../model/userModel.js";  // Assuming you have a User model
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-
-const JWT_SECRET = process.env.JWT_SECRET; // Your JWT secret key
 
 // Signup
 export const signUp = async (req, res) => {
