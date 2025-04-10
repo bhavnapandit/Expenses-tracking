@@ -22,32 +22,26 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ MongoDB connection with caching
-let isConnected = false;
+// ✅ MongoDB connection
 async function connectToDB() {
-    if (isConnected || mongoose.connection.readyState === 1) return;
-
     try {
         await mongoose.connect(process.env.MONGO_URI);
-        isConnected = true;
         console.log("✅ MongoDB connected");
     } catch (err) {
         console.error("❌ MongoDB connection error:", err);
+        process.exit(1); // Exit if DB fails to connect
     }
 }
-
-// ✅ Middleware to connect to DB before handling routes
-app.use(async (req, res, next) => {
-    await connectToDB();
-    next();
-});
 
 // ✅ Routes
 app.get("/", (req, res) => res.json({ message: "Backend is working!" }));
 app.use("/api/user", userRouter);
 app.use("/api/expense", expenseRoutes);
 
-// ✅ Start server (REQUIRED for Render)
-app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
-});
+// ✅ Connect to DB and start server
+(async () => {
+    await connectToDB();
+    app.listen(PORT, () => {
+        console.log(`🚀 Server is running on port ${PORT}`);
+    });
+})();
