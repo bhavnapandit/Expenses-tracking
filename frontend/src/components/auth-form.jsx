@@ -3,6 +3,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
+import { apiRequest } from "../utils/api";
 
 const AuthForm = () => {
     const dispatch = useDispatch();
@@ -33,18 +34,13 @@ const AuthForm = () => {
                 payload.name = inputs.name;
             }
 
-            const res = await axios.post(
-                `https://expenses-tracking-api.onrender.com/api/user/${type}`,
-                payload,
-                {
-                    withCredentials: true,
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-
-            return res.data;
+            const data= await apiRequest({
+                endpoint: `/api/user/${type}`,
+                method: "POST",
+                data: payload,
+            });
+            console.log(data)
+            return data;
         } catch (error) {
             console.error(error);
             setErrorMsg(error?.response?.data?.message || "Something went wrong.");
@@ -58,12 +54,15 @@ const AuthForm = () => {
 
         const data = await sendRequest(activeTab);
 
-        if (data?.user) {
-            dispatch(authActions.login({ user: data.user }));
-            setInputs({ name: "", email: "", password: "" });
+        if (data?.user && data?.token) {
+        // Save JWT and user info to localStorage
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
 
-            // optional: save to localStorage (not a token)
-            localStorage.setItem("user", JSON.stringify(data.user));
+        // Optionally update Redux auth state
+        dispatch(authActions.login({ user: data.user }));
+
+        setInputs({ name: "", email: "", password: "" });
 
             navigate("/expensetracker");
         } else {

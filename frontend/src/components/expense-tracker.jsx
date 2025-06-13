@@ -10,6 +10,7 @@ import AuthForm from "./auth-form";
 import Modal from "@mui/material/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "../redux/authSlice";
+import { apiRequest } from "../utils/api";
 
 const defaultCategories = [
   { id: "1", name: "Food", color: "bg-red-500" },
@@ -50,10 +51,14 @@ export function ExpenseTracker() {
   // ✅ Fetch only that user's expenses
   const fetchExpenses = async () => {
     try {
-      const res = await axios.get(
-        `https://expenses-tracking-api.onrender.com/api/expense/${user._id}`
-      );
-      return res.data;
+      const token = localStorage.getItem("token");
+      const data = await apiRequest({
+        endpoint: `/api/expense/${user._id}`,
+        method: "GET",
+        token, // ⬅️ add token here
+      });
+      console.log(data);
+      return data;
     } catch (error) {
       console.error("Fetch error:", error);
       return [];
@@ -81,8 +86,9 @@ export function ExpenseTracker() {
   const addExpense = async (expense) => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
+      const token = localStorage.getItem("token");
 
-      if (!user?._id) {
+      if (!user?._id || !token) {
         return setAlert({
           open: true,
           message: "User not authenticated.",
@@ -95,20 +101,19 @@ export function ExpenseTracker() {
         user: user._id,
       };
 
-      const res = await axios.post(
-        "https://expenses-tracking-api.onrender.com/api/expense",
-        payload
-      );
+      const res = await apiRequest({
+        endpoint: "/api/expense",
+        method: "POST",
+        data: payload,
+        token, // ⬅️ add token
+      });
 
-      // Only add the actual expense object, not the whole message
-      const newExpense = res.data.expense;
+      const newExpense = res.expense;
 
-      // Optimistically update state
       setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
 
-      // Optional: Refresh from backend to sync
       await refreshExpenses();
-
+      
       setAlert({
         open: true,
         message: "Expense added successfully!",
@@ -127,9 +132,13 @@ export function ExpenseTracker() {
   // ✅ Delete Expense by ID
   const deleteExpense = async (id) => {
     try {
-      await axios.delete(
-        `https://expenses-tracking-api.onrender.com/api/expense/delete/${id}`
-      );
+      const token = localStorage.getItem("token");
+
+      await apiRequest({
+        endpoint: `/api/expense/delete/${id}`,
+        method: "DELETE",
+        token, // ⬅️ add token
+      });
 
       setExpenses((prevExpenses) =>
         prevExpenses.filter((expense) => expense._id !== id)

@@ -1,5 +1,7 @@
-import User from "../model/userModel.js";  // Assuming you have a User model
+import User from "../model/userModel.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+
 
 // Signup
 export const signUp = async (req, res) => {
@@ -22,8 +24,15 @@ export const signUp = async (req, res) => {
 
         await user.save();
 
-        res.status(201).json({
-            message: "Signup successful",
+        const token = jwt.sign(
+            { userId: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
+        );
+
+        res.status(200).json({
+            message: "SignUp successful",
+            token,
             user: {
                 _id: user._id,
                 name: user.name,
@@ -31,6 +40,7 @@ export const signUp = async (req, res) => {
                 expenses: user.expenses,
             },
         });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Error creating user" });
@@ -51,9 +61,15 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Password is incorrect" });
         }
 
-        // ✅ No JWT — just send user info
+        const token = jwt.sign(
+            { userId: user._id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
+        );
+
         res.status(200).json({
             message: "Login successful",
+            token,
             user: {
                 _id: user._id,
                 name: user.name,
@@ -61,6 +77,7 @@ export const login = async (req, res) => {
                 expenses: user.expenses,
             },
         });
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error.message });

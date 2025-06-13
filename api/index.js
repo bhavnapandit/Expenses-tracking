@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 // ✅ CORS config
 const corsOptions = {
     origin: "https://expenses-tracking-frontend.vercel.app",
+    // origin:"http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
 };
