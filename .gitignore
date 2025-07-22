@@ -11,4 +11,4 @@ venv/
 *.log
 *.tmp
 *.swp
-.env/
+api/.env
