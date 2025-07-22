@@ -83,12 +83,7 @@ export function ExpenseList({ expenses, categories, onDelete }) {
             <option value="all">All Categories</option>
             {categories.map((category) => (
               <option key={category.id} value={category.name}>
-                <div className="flex items-center gap-2">
-                  <div
-                    className={`w-3 h-3 rounded-full ${category.color}`}
-                  ></div>
-                  <span>{category.name}</span>
-                </div>
+                {category.name}
               </option>
             ))}
           </select>

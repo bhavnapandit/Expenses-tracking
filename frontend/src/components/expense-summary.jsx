@@ -52,7 +52,7 @@ export function ExpenseSummary({ expenses, categories }) {
         <div className="text-center mt-4">
           <p className="text-md text-gray-400">Total Expenses</p>
           <p className="text-2xl font-bold text-gray-800">
-          ₹{totalExpenses.toFixed(2)}
+            ₹{totalExpenses.toFixed(2)}
           </p>
         </div>
 
@@ -110,28 +110,29 @@ export function ExpenseSummary({ expenses, categories }) {
           {expensesByCategory.length > 0 ? (
             expensesByCategory.map((category) => (
               <div
-  key={category.name}
-  className="flex items-center justify-between space-x-4 w-full md:w-auto"
->
-  <div className="flex items-center space-x-2">
-    <div
-      className={`w-4 h-4 rounded-full`}
-      style={{
-        backgroundColor: getTailwindColor(category.color),
-      }}
-    ></div>
-    <span className="text-base md:text-md text-gray-700">{category.name}</span>
-  </div>
-  <div className="flex items-center space-x-2">
-    <span className="font-medium text-sm md:text-md text-gray-800">
-    ₹{category.value.toFixed(2)}
-    </span>
-    <span className="text-xs md:text-[10px] text-gray-500">
-      ({((category.value / totalExpenses) * 100).toFixed(1)}%)
-    </span>
-  </div>
-</div>
-
+                key={category.name}
+                className="flex items-center justify-between space-x-4 w-full md:w-auto"
+              >
+                <div className="flex items-center space-x-2">
+                  <div
+                    className={`w-4 h-4 rounded-full`}
+                    style={{
+                      backgroundColor: getTailwindColor(category.color),
+                    }}
+                  ></div>
+                  <span className="text-base md:text-md text-gray-700">
+                    {category.name}
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="font-medium text-sm md:text-md text-gray-800">
+                    ₹{category.value.toFixed(2)}
+                  </span>
+                  <span className="text-xs md:text-[10px] text-gray-500">
+                    ({((category.value / totalExpenses) * 100).toFixed(1)}%)
+                  </span>
+                </div>
+              </div>
             ))
           ) : (
             <p className="text-center text-gray-500">No data available</p>

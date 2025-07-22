@@ -30,20 +30,37 @@ const AuthForm = () => {
                 password: inputs.password,
             };
 
+            // Validation checks
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            if (!inputs.email || !emailRegex.test(inputs.email)) {
+                setErrorMsg("Please enter a valid email address");
+                return null;
+            }
+
+            if (inputs.password.length < 8) {
+                setErrorMsg("Password must be at least 8 characters long");
+                return null;
+            }
+
+            if (type === "signup" && (!inputs.name || inputs.name.length < 3 || /[!@#$%^&*(),.?":{}|<>\-_=+]/.test(inputs.name))) {
+                setErrorMsg("Name should not contain special characters and must be at least 3 characters long");
+                return null;
+            }
+
             if (type === "signup") {
                 payload.name = inputs.name;
             }
 
-            const data= await apiRequest({
+            const data = await apiRequest({
                 endpoint: `/api/user/${type}`,
                 method: "POST",
                 data: payload,
             });
-            console.log(data)
+            // console.log(data)
             return data;
         } catch (error) {
-            console.error(error);
-            setErrorMsg(error?.response?.data?.message || "Something went wrong.");
+            // console.error(error?.message);
+            setErrorMsg(error?.message || "Something went wrong. Please try again later.");
             return;
         }
     };
@@ -55,18 +72,18 @@ const AuthForm = () => {
         const data = await sendRequest(activeTab);
 
         if (data?.user && data?.token) {
-        // Save JWT and user info to localStorage
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+            // Save JWT and user info to localStorage
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
 
-        // Optionally update Redux auth state
-        dispatch(authActions.login({ user: data.user }));
+            // Optionally update Redux auth state
+            dispatch(authActions.login({ user: data.user }));
 
-        setInputs({ name: "", email: "", password: "" });
+            setInputs({ name: "", email: "", password: "" });
 
             navigate("/expensetracker");
         } else {
-            setErrorMsg("Authentication failed. Please try again.");
+           return
         }
     };
 
@@ -105,8 +122,8 @@ const AuthForm = () => {
                             value={inputs.name}
                             onChange={handleChange}
                             placeholder="Name"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                             required
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                         />
                     )}
                     <input
@@ -115,17 +132,17 @@ const AuthForm = () => {
                         value={inputs.email}
                         onChange={handleChange}
                         placeholder="Email Address"
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                         required
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
                     />
                     <input
                         type="password"
                         name="password"
                         value={inputs.password}
                         onChange={handleChange}
+                        required
                         placeholder="Password"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                        required
                     />
                     <button
                         type="submit"

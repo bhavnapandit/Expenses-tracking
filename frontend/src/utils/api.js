@@ -38,7 +38,7 @@ export  const apiRequest = async ({
 
         return result;
     } catch (error) {
-        console.error('API error:', error.message);
+        // console.error('API error:', error.message);
         throw error;
     }
 };

@@ -57,7 +57,7 @@ export function ExpenseTracker() {
         method: "GET",
         token, // ⬅️ add token here
       });
-      console.log(data);
+      // console.log(data);
       return data;
     } catch (error) {
       console.error("Fetch error:", error);
