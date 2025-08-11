@@ -7,12 +7,12 @@ COPY frontend/ ./
 RUN npm run build
 
 FROM node:20
-WORKDIR /app/backend
+WORKDIR /app/api
 
-COPY backend/package*.json ./
+COPY api/package*.json ./
 RUN npm install
 
-COPY backend/ ./
+COPY api/ ./
 
 COPY --from=frontend-builder /app/frontend/build ./public
 
@@ -22,3 +22,4 @@ EXPOSE 5000
 ENV MONGO_URI=${MONGO_URI}
 
 CMD ["npm", "start"]
+
