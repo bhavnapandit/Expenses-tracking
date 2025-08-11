@@ -16,13 +16,38 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      # ---------- Backend ----------
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - name: "Installing Dependencies"
+          cache-dependency-path: api/package-lock.json
+
+      - name: "Installing backend Dependencies"
+        working-directory: api
         run: npm i
 
-      - name: "Build command"
+
+      - name: "Build Backend command"
+        working-directory: api
         run: npm run build
+      
+
+      # ---------- Frontend ----------
+      - name: Use Node.js ${{ matrix.node-version }} for frontend
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+        
+      - name: "Installing Frontend Dependencies"
+        working-directory: frontend
+        run: npm i
+
+
+      - name: "Build frontend command"
+        working-directory: api
+        run: npm run build
+
