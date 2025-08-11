@@ -49,5 +49,5 @@ jobs:
 
       - name: "Build frontend command"
         working-directory: api
-        run: npm run build
+        run: npm run build --if-present
 
